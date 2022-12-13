@@ -1,7 +1,7 @@
 package com.vispro.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vispro.dto.ProductDto;
+import com.vispro.dto.product.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

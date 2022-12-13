@@ -1,6 +1,6 @@
 package com.vispro.controller;
 
-import com.vispro.dto.ProductDto;
+import com.vispro.dto.product.ProductDto;
 import com.vispro.model.Category;
 import com.vispro.response.ApiResponse;
 import com.vispro.service.CategoryService;

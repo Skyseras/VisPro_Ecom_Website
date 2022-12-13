@@ -1,4 +1,4 @@
-package com.vispro.dto;
+package com.vispro.dto.product;
 
 import com.vispro.model.Product;
 import lombok.AllArgsConstructor;
