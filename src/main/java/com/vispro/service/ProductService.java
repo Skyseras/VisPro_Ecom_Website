@@ -1,6 +1,6 @@
 package com.vispro.service;
 
-import com.vispro.dto.ProductDto;
+import com.vispro.dto.product.ProductDto;
 import com.vispro.exceptions.ProductNotExistException;
 import com.vispro.model.Category;
 import com.vispro.model.Product;
