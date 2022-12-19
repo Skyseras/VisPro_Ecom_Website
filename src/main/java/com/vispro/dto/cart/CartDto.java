@@ -1,7 +1,14 @@
 package com.vispro.dto.cart;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.util.List;
+@Data
+@ToString
+@NoArgsConstructor
 public class CartDto {
     private List<CartItemDto> cartItems;
     private double totalCost;

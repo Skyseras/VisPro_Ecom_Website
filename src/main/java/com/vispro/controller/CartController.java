@@ -2,6 +2,7 @@ package com.vispro.controller;
 
 import com.vispro.dto.cart.AddToCartDto;
 import com.vispro.dto.cart.CartDto;
+import com.vispro.dto.cart.CartItemDto;
 import com.vispro.exceptions.CartItemNotExistException;
 import com.vispro.exceptions.ProductNotExistException;
 import com.vispro.model.Product;
@@ -11,12 +12,16 @@ import com.vispro.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
-@RestController
-@RequestMapping("/cart")
+@Controller
+@RequestMapping("/")
 public class CartController {
     @Autowired
     private CartService cartService;
@@ -25,32 +30,33 @@ public class CartController {
     private ProductService productService;
 
 
-    @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDto addToCartDto) throws ProductNotExistException {
-        Product product = productService.getProductById(addToCartDto.getProductId());
-        System.out.println("product to add"+  product.getName());
-        cartService.addToCart(addToCartDto, product);
-        return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
-
+    @PostMapping("cart/add")
+    public String addToCart(@RequestParam("id") Integer id, @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity, HttpServletRequest request) throws ProductNotExistException {
+        Product product = productService.getProductById(id);
+        cartService.addToCart(quantity, product);
+        return "redirect:" + request.getHeader("Referer");
     }
 
-    @GetMapping("/")
-    public ResponseEntity<CartDto> getCartItems() {
+    @GetMapping("cart")
+    public String getCartItems(Model model) {
         CartDto cartDto = cartService.listCartItems();
-        return new ResponseEntity<CartDto>(cartDto,HttpStatus.OK);
+        List<CartItemDto> cartItemDto = cartDto.getcartItems();
+        model.addAttribute("totalCart" , cartDto.getTotalCost());
+        model.addAttribute("listCart" , cartItemDto);
+        return "cart";
     }
 
     @PutMapping("/update/{cartItemId}")
-    public ResponseEntity<ApiResponse> updateCartItem(@RequestBody @Valid AddToCartDto cartDto) throws ProductNotExistException {
-        /*Product product = productService.getProductById(cartDto.getProductId());*/
-        cartService.updateCartItem(cartDto/*,product*/);
-        return new ResponseEntity<>(new ApiResponse(true, "Product has been updated"), HttpStatus.OK);
+    public String updateCartItem(@RequestBody @Valid AddToCartDto cartDto) throws ProductNotExistException {
+        Product product = productService.getProductById(cartDto.getProductId());
+        cartService.updateCartItem(cartDto,product);
+        return "cart";
     }
 
     @DeleteMapping("/delete/{cartItemId}")
-    public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable("cartItemId") int itemID) throws CartItemNotExistException {
+    public String deleteCartItem(@PathVariable("cartItemId") int itemID) throws CartItemNotExistException {
         cartService.deleteCartItem(itemID);
-        return new ResponseEntity<>(new ApiResponse(true, "Item has been removed"), HttpStatus.OK);
+        return "cart";
     }
 
 }

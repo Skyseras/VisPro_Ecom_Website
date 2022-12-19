@@ -26,8 +26,8 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
-    public void addToCart(AddToCartDto addToCartDto, Product product){
-        Cart cart = new Cart(product, addToCartDto.getQuantity());
+    public void addToCart(int quantity, Product product){
+        Cart cart = new Cart(product, quantity);
         cartRepository.save(cart);
     }
 
